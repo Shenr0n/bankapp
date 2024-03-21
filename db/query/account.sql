@@ -23,6 +23,12 @@ ORDER BY id
 LIMIT $1
 OFFSET $2;
 
+-- name: UpdateAccountName :one
+UPDATE accounts
+SET owner = $2
+WHERE id = $1
+RETURNING *;
+
 -- name: UpdateAccount :one
 UPDATE accounts
 SET balance = $2

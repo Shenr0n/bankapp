@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"testing"
 	"time"
 
@@ -96,4 +97,24 @@ func TestListAccounts(t *testing.T) {
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
 	}
+}
+
+func TestUpdateAccountName(t *testing.T) {
+	account1 := createRandomAccount(t)
+	fmt.Println("account name before: ", account1.Owner)
+	arg := UpdateAccountNameParams{
+		ID:    account1.ID,
+		Owner: util.RandomOwner(),
+	}
+
+	account2, err := testQueries.UpdateAccountName(context.Background(), arg)
+	fmt.Println("account name after: ", account2.Owner)
+	require.NoError(t, err)
+	require.NotEmpty(t, account2)
+
+	require.Equal(t, account1.ID, account2.ID)
+	require.NotEqual(t, account1.Owner, account2.Owner)
+	require.Equal(t, account1.Balance, account2.Balance)
+	require.Equal(t, account1.Currency, account2.Currency)
+	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, time.Second)
 }
