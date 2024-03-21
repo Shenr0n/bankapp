@@ -11,6 +11,9 @@ type Server struct {
 	//Router to send each API request to corresponding handlers
 	router *gin.Engine
 }
+type getIDRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
 
 // Create a new http server and setup routing
 func NewServer(store *db.Store) *Server {
@@ -18,11 +21,19 @@ func NewServer(store *db.Store) *Server {
 	router := gin.Default()
 
 	//Add routes to router
+
+	//Account
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
 	router.GET("/accounts", server.listAccounts)
 	router.PUT("/accounts/:id/update/name", server.updateAccountName)
 	router.DELETE("/accounts/:id/delete", server.deleteAccount)
+
+	//Entry
+	router.GET("/accounts/:id/entries", server.listAccountEntries)
+	router.GET("/entries/:id", server.getEntry)
+
+	//Transfer
 
 	server.router = router
 	return server
