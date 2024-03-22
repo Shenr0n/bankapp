@@ -77,20 +77,21 @@ func TestDeleteAccount(t *testing.T) {
 
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
+
 	require.Empty(t, account2)
 }
 
-func TestListAccounts(t *testing.T) {
+func TestListAllAccounts(t *testing.T) {
 	for i := 0; i < 8; i++ {
 		createRandomAccount(t)
 	}
 
-	arg := ListAccountsParams{
+	arg := ListAllAccountsParams{
 		Limit:  4,
 		Offset: 4,
 	}
 
-	accounts, err := testQueries.ListAccounts(context.Background(), arg)
+	accounts, err := testQueries.ListAllAccounts(context.Background(), arg)
 	require.NoError(t, err)
 	require.Len(t, accounts, 4)
 
