@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: k8.io/ingress-nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bank-app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "api.bank-app.com" # This value needs to be changed. Set this as the correct record of the registered domain in Route 53 
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: bank-app-api-service
+            port:
+              number: 80
